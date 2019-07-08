@@ -22,7 +22,7 @@ int		ccpy(char **line, char *content, char c)
 	return (i);
 }
 
-t_list	*cur_lst(const int fd, t_list **readlist)
+t_list	*curr_lst(const int fd, t_list **readlist)
 {
 	t_list	*temp;
 
@@ -40,16 +40,44 @@ t_list	*cur_lst(const int fd, t_list **readlist)
 	return (temp);
 }
 
+int		read_loop(const int fd, char **content)
+{
+	int		res;
+	char	*removal;
+	char	buf[BUFF_SIZE + 1];
+
+	while ((res = read(fd, buf, BUFF_SIZE)))
+	{
+		buf[res] = '\0';
+		removal = *content;
+		if (!(*content = ft_strjoin(*content, buf)))
+			return (-1);
+		free(removal);
+		if (ft_strchr(buf, '\n'))
+			break ;
+	}
+	return (res);
+}
+
 int	get_next_line(const int fd, char **line)
 {
-	char		buf[BUFF_SIZE + 1];
+	char			buf[BUFF_SIZE + 1];
 	static t_list	*readlist;
-	int		suc;
-	char		*temp;
-	t_list		*cur;
+	int				suc;
+	char			*temp;
+	t_list			*curr;
 
-	if (fd < 0 || !line || read(fd,buf,50) < 0 || (!(cur = cur_lst(fd, &readlist))))
+	if (fd < 0 || !line || read(fd,buf,50) < 0 || (!(curr = curr_lst(fd, &readlist))))
 		return (-1);
-	
+	temp = curr->content;
+	suc = read_loop(fd,&temp);
+	curr->content = temp;
+	if (temp[suc] != '\0')
+	{
+		curr->content = ft_strdup(&(curr->content[res + 1]));
+		free(temp);
+	}
+	else
+		tmp[0] = '\0';
 	return (1);
 }
