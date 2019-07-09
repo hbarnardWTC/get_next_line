@@ -24,20 +24,20 @@ int		ccpy(char **line, char *content, char c)
 
 t_list	*curr_lst(const int fd, t_list **readlist)
 {
-	t_list	*temp;
+	t_list	*curr;
 
 	if (!readlist)
-		return	(NULL);
-	tmp = *readlist;
-	while (temp)
+		return (NULL);
+	curr = *readlist;
+	while (curr)
 	{
-		if (temp->content_size == fd)
-			return (temp);
-		temp = temp->next;
+		if (curr->content_size == (size_t)fd)
+			return (curr);
+		curr = curr->next;
 	}
-	temp = ft_lstnew("", fd);
-	ft_lstadd(hlist, temp);
-	return (temp);
+	curr = ft_lstnew("", fd);
+	ft_lstadd(readlist, curr);
+	return (curr);
 }
 
 int		read_loop(const int fd, char **content)
@@ -59,7 +59,7 @@ int		read_loop(const int fd, char **content)
 	return (res);
 }
 
-int	get_next_line(const int fd, char **line)
+int		get_next_line(const int fd, char **line)
 {
 	char			buf[BUFF_SIZE + 1];
 	static t_list	*readlist;
@@ -67,17 +67,22 @@ int	get_next_line(const int fd, char **line)
 	char			*temp;
 	t_list			*curr;
 
-	if (fd < 0 || !line || read(fd,buf,50) < 0 || (!(curr = curr_lst(fd, &readlist))))
+	if (fd < 0 || !line || read(fd, buf, 0) < 0
+	|| (!(curr = curr_lst(fd, &readlist))))
 		return (-1);
 	temp = curr->content;
-	suc = read_loop(fd,&temp);
+	suc = read_loop(fd, &temp);
 	curr->content = temp;
+	if (!suc && !*temp)
+		return (0);
+	suc = ccpy(line, curr->content, '\n');
+	temp = curr->content;
 	if (temp[suc] != '\0')
 	{
-		curr->content = ft_strdup(&(curr->content[res + 1]));
+		curr->content = ft_strdup(&(curr->content[suc + 1]));
 		free(temp);
 	}
 	else
-		tmp[0] = '\0';
+		temp[0] = '\0';
 	return (1);
 }
