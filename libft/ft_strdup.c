@@ -14,16 +14,5 @@
 
 char	*ft_strdup(const char *s1)
 {
-	int		i;
-	char	*str;
-
-	i = 0;
-	if (!(str = ft_strnew(ft_strlen(s1))))
-		return (NULL);
-	while (s1[i])
-	{
-		str[i] = s1[i];
-		i++;
-	}
-	return (str);
+	return (ft_strndup(s1, (ft_strlen(s1))));
 }
