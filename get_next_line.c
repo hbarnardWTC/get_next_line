@@ -14,9 +14,11 @@
 
 int		ccpy(char **line, char *content, char c)
 {
-	int	i;
+	int		i;
 
-	i = poschr(content, c);
+	i = 0;
+	while (content[i] && content[i] != c)
+		i++;
 	if (!(*line = ft_strndup(content, i)))
 		return (0);
 	return (i);
