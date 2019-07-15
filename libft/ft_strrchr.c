@@ -14,12 +14,16 @@
 
 char	*ft_strrchr(const char *s, int c)
 {
-	int		len;
+	char	needle;
+	size_t	i;
 
-	len = ft_strlen(s);
-	while (0 < len && s[len] != (char)c)
-		len--;
-	if (s[len] == (char)c)
-		return ((char *)s + len);
+	needle = (char)c;
+	i = ft_strlen(s) + 1;
+	while (i > 0)
+	{
+		if (s[i - 1] == needle)
+			return ((char *)s + (i - 1));
+		i--;
+	}
 	return (NULL);
 }
